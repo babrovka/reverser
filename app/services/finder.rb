@@ -2,7 +2,7 @@ class Finder
   attr_reader :image_url, :sites, :phrases
 
   def initialize(params)
-    @image_url = CGI.escape(params[:image_url])
+    @image_url = params[:image_url]
     @phrases = params[:phrases].join(" | ") rescue ""
     @sites = params[:sites].map { |site| "site:#{site}" }.join(" | ") rescue ""
   end
