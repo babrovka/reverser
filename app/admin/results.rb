@@ -1,4 +1,6 @@
 ActiveAdmin.register Result do
+  menu false
+
   index do
     selectable_column
     column :title do |result|

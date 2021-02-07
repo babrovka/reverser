@@ -1,4 +1,6 @@
 ActiveAdmin.register_page "Find images" do
+  menu false
+
   content do
     render partial: 'finder_form'
   end
