@@ -1,0 +1,28 @@
+<%= form_tag search_admin_image_path(@image), class: "formtastic result" do %>
+  <fieldset class="inputs">
+    <legend><span>Phrases:</span></legend>
+    <%= text_field_tag 'phrases', 't-shirt' %>
+  </fieldset>
+
+<!--   <fieldset class="inputs">
+    <legend><span>Sites:</span></legend>
+    <ol>
+      <% Site.all.each do |site| %>
+        <li>
+          <%= label_tag do %>
+            <%= check_box_tag 'sites[]', site.name %>
+            <%= site.name %>
+          <% end %>
+        </li>
+      <% end %>
+    </ol>
+  </fieldset> -->
+
+  <%= hidden_field_tag 'image_url', @escaped_url %>
+
+  <fieldset class="actions">
+    <ol><li><%= submit_tag('Search') %></li></ol>
+  </fieldset>
+<% end %>
+
+<%= image_tag url_for(@image.file), style: "max-width: 200px; height: auto; " %>

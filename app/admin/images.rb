@@ -9,7 +9,7 @@ ActiveAdmin.register Image do
       image_tag url_for(instance.file), style: "max-width: 300px; height: auto; "
     end
     actions defaults: true do |item|
-      link_to 'Search', search_admin_image_path(item), style: "font-weight: bold; "
+      link_to 'Search', query_admin_image_path(item), style: "font-weight: bold; "
     end
   end
 
@@ -30,12 +30,15 @@ ActiveAdmin.register Image do
     end
   end
 
-  member_action :search, method: :get do
-    image = Image.find(params[:id])
-    url = url_for(image.file)
-    image_url = CGI.escape(url)
+  member_action :query, method: :get do
+    @image = Image.find(params[:id])
+    url = url_for(@image.file)
+    @escaped_url = CGI.escape(url)
+  end
 
-    url = Finder.new(image_url).find_similar
-    redirect_to url
+  member_action :search, method: :post do
+    @response = Finder.new(params).find_similar
+    redirect_to @response
+    # render inline: @response
   end
 end
