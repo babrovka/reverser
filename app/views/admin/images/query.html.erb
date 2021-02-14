@@ -4,19 +4,19 @@
     <%= text_field_tag 'phrases', 't-shirt' %>
   </fieldset>
 
-<!--   <fieldset class="inputs">
+  <fieldset class="inputs">
     <legend><span>Sites:</span></legend>
     <ol>
       <% Site.all.each do |site| %>
         <li>
           <%= label_tag do %>
-            <%= check_box_tag 'sites[]', site.name %>
+            <%= radio_button_tag 'domain', site.name %>
             <%= site.name %>
           <% end %>
         </li>
       <% end %>
     </ol>
-  </fieldset> -->
+  </fieldset>
 
   <%= hidden_field_tag 'image_url', @escaped_url %>
 

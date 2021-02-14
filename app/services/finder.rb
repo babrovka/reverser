@@ -1,13 +1,11 @@
 class Finder
-  attr_reader :image_url, :sites, :phrases
+  attr_reader :image_url, :domain, :phrases
 
   def initialize(params)
     # @image_url = "https%3A%2F%2Fi.pinimg.com%2Foriginals%2F35%2F0e%2F73%2F350e73b5fcb3326850b3a9a82c13c760.jpg"
     @image_url = params[:image_url]
     @phrases = params[:phrases]
-    # @image_url = params[:image_url]
-    # @phrases = params[:phrases].join(" | ") rescue ""
-    # @sites = params[:sites].map { |site| "site:#{site}" }.join(" | ") rescue ""
+    @domain = params[:domain]
   end
 
   def find_similar
@@ -16,24 +14,15 @@ class Finder
     client.redirect_url
 
     client.url = modified_url(client.redirect_url)
-    # client.perform
-    # binding.pry
-    # client.body
-    # tineye = Tinplate::TinEye.new
-    # results = tineye.search(image_url: image_url)
-
-    # results.matches.each do |match|
-    #   Result.create(title: match["backlinks"].first["backlink"], link: match["backlinks"].first["url"])
-    # end
   end
 
   def initial_url
-    "https://images.google.com/searchbyimage?image_url=#{image_url}&encoded_image=&image_content=&filename=&hl=ru"
+    "https://images.google.com/searchbyimage?image_url=#{image_url}"
   end
 
   def modified_url(redirect_url)
     uri = URI.parse(redirect_url)
-    new_query_ar = URI.decode_www_form(uri.query || '') << ["q", @phrases] << ["oq", @phrases]
+    new_query_ar = URI.decode_www_form(uri.query || '') << ["q", @phrases] << ["sitesearch", domain]
     uri.query = URI.encode_www_form(new_query_ar)
     uri.to_s
   end
