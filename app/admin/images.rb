@@ -38,7 +38,7 @@ ActiveAdmin.register Image do
 
   member_action :search, method: :post do
     @response = Finder.new(params).find_similar
-    redirect_to @response
-    # render inline: @response
+    # redirect_to @response
+    render inline: @response
   end
 end

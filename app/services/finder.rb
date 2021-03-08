@@ -9,11 +9,13 @@ class Finder
   end
 
   def find_similar
-    client.url = initial_url
-    client.perform
-    client.redirect_url
+    resp = client.get(initial_url)
+    url = modified_url(resp.header["location"])
+    resp = client.get(url)
 
-    client.url = modified_url(client.redirect_url)
+    similar_images_link = resp.links.find { |link| link.href&.match?(/simg/) }
+    similar_images_response = similar_images_link.click
+    similar_images_response.body
   end
 
   def initial_url
@@ -22,19 +24,21 @@ class Finder
 
   def modified_url(redirect_url)
     uri = URI.parse(redirect_url)
-    new_query_ar = URI.decode_www_form(uri.query || '') << ["q", @phrases] << ["sitesearch", domain]
+    new_query_ar = URI.decode_www_form(uri.query || '') << ["q", domain]
     uri.query = URI.encode_www_form(new_query_ar)
     uri.to_s
   end
 
   def client
     @_client ||= begin
-      Curl::Easy.new("http://www.google.co.uk") do |curl|
-        curl.headers["authority"] = "images.google.com"
-        curl.headers["upgrade-insecure-requests"] = "1"
-        curl.headers["User-Agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1"
-        curl.verbose = true
-      end
+      agent = Mechanize.new
+      agent.request_headers = {
+        'authority' => 'images.google.com',
+        'upgrade-insecure-requests' => '1',
+        'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1'
+      }
+      agent.redirect_ok = false
+      agent
     end
   end
 end
