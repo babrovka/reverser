@@ -1,5 +1,10 @@
 <%= form_tag search_admin_image_path(@image), class: "formtastic result" do %>
   <fieldset class="inputs">
+    <legend><span>Phrases:</span></legend>
+    <%= text_field_tag 'phrases', @image.title %>
+  </fieldset>
+
+  <fieldset class="inputs">
     <legend><span>Sites:</span></legend>
     <ol>
       <% Site.all.each do |site| %>

@@ -1,11 +1,10 @@
 class Finder
-  attr_reader :image_url, :domain, :phrases
+  attr_reader :image_url, :query
 
   def initialize(params)
     # @image_url = "https%3A%2F%2Fi.pinimg.com%2Foriginals%2F35%2F0e%2F73%2F350e73b5fcb3326850b3a9a82c13c760.jpg"
     @image_url = params[:image_url]
-    @phrases = params[:phrases]
-    @domain = params[:domain]
+    @query = [params[:phrases], params[:domain]].join(" ")
   end
 
   def find_similar
@@ -24,7 +23,7 @@ class Finder
 
   def modified_url(redirect_url)
     uri = URI.parse(redirect_url)
-    new_query_ar = URI.decode_www_form(uri.query || '') << ["q", domain]
+    new_query_ar = URI.decode_www_form(uri.query || '') << ["q", query]
     uri.query = URI.encode_www_form(new_query_ar)
     uri.to_s
   end
